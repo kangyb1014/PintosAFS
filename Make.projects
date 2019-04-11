@@ -1,0 +1,6 @@
+# -*- makefile -*-
+
+# Sources for project 1.
+projects/factorii_SRC  = projects/factorii/factorii.c
+projects/factorii_SRC  += projects/factorii/ironLine.c
+projects/factorii_SRC  += projects/factorii/observer.c
