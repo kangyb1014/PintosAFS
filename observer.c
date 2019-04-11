@@ -93,7 +93,7 @@ void observer(){
             if(!onBelt1[0] && !onBelt1[1] && !onBelt1[2] && 
             !onBelt3[0] && !onBelt3[1] && !onBelt3[2] && heatTimeFurnace1 == 0)
             flag = true;
-            
+
             /*else if(!onBelt2[0] && !onBelt2[1] && !onBelt2[2] && 
             !onBelt4[0] && !onBelt4[1] && !onBelt4[2] && heatTimeFurnace2 == 0)
             flag = true;
