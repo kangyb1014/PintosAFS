@@ -22,7 +22,6 @@ void furnace3(){
     while(true){
         /*wait signal from observer*/
         sema_down(&observer_s);
-
         /*critical section*/
         sema_down(&merging_s);
         sema_down(&global_s);
@@ -49,10 +48,10 @@ void furnace3(){
 
 void timer(){
     while(true){
-        /*if time change*/
+        timer_msleep(1000);
         sema_up(&timer_s);
-        /*wait for time change*/
     }
+    thread_yield();
 }
 
 void observer(){
@@ -60,10 +59,8 @@ void observer(){
     bool flag = false;
     while(!flag){
         sema_up(&observer_s);
-        /* copper 만들면 사용 */
-        //sema_up(&observer_s);
         sema_down(&belt1_s);
-        //sema_down(&belt2_s);
+        sema_down(&belt2_s);
         sema_down(&timer_s);
 
         /*critical section, output*/
@@ -80,7 +77,7 @@ void observer(){
         melting(heatTimeFurnace1),
         isIngot(onBelt3[0]),isIngot(onBelt3[1]),isIngot(onBelt3[2])
         );
-        printf("X X X X X X X X X \n");
+        printf("X X X X X X X X X -\n");
         printf("%c %c %c @ %c @ %c %c %c @\n",
         isOre(onBelt2[0]),isOre(onBelt2[1]), isOre(onBelt2[2]),
         melting(heatTimeFurnace2),
@@ -89,15 +86,19 @@ void observer(){
         printf("X X X X X X X X X X\n");
 
         /*terminate condition*/
-        if(ironInFurnace3 < ironNeed || coInFurnace3 < coNeed){
+        if(ironInFurnace3 < ironNeed){
             if(!onBelt1[0] && !onBelt1[1] && !onBelt1[2] && 
-            !onBelt3[0] && !onBelt3[1] && !onBelt3[2] && heatTimeFurnace1 == 0)
-            flag = true;
-
-            /*else if(!onBelt2[0] && !onBelt2[1] && !onBelt2[2] && 
-            !onBelt4[0] && !onBelt4[1] && !onBelt4[2] && heatTimeFurnace2 == 0)
-            flag = true;
-        */}
+            !onBelt3[0] && !onBelt3[1] && !onBelt3[2] && heatTimeFurnace1 == 0){
+                flag = true;
+            }
+        }
+        if(coInFurnace3 < coNeed){
+            if(!onBelt2[0] && !onBelt2[1] && !onBelt2[2] && 
+            !onBelt4[0] && !onBelt4[1] && !onBelt4[2] && heatTimeFurnace2 == 0){
+                flag = true;
+                
+            }
+        }
 
         sema_up(&global_s);
         sema_up(&merging_s);

@@ -10,14 +10,15 @@
 
 #include "components.h"
 
+
 /*semaphores for interconnection*/
 struct semaphore robotArm1_s,robotArm2_s,robotArm3_s,robotArm4_s,robotArm5_s,robotArm6_s;
 struct semaphore furnace1_s, furnace2_s, furnace3_iron_s, furnace3_co_s;
 struct semaphore belt1_s,belt2_s,belt3_s,belt4_s;
 struct semaphore observer_s, timer_s;
 
-/*const values*/
-const int ironNeed = 3, coNeed = 0;
+/*num of meterials need to make CoFeIng*/
+int ironNeed = 1, coNeed = 2;
 
 /*critical sections between iron line*/
 bool onBelt1[3] = {0,0,0};
@@ -41,12 +42,19 @@ int heatTimeFurnace3 = 0;
 struct semaphore merging_s;
 
 /*critical sections between observer and others*/
-int remainIron = 6, remainCo = 0;
+int remainIron = 2, remainCo = 5;
 int CoFeIng = 0;
 /*semaphore for mutual exclusion*/
 struct semaphore global_s;
 
 void run_factorii(char **argv){
+        /*get input*/
+        remainIron = atoi(argv[1]);
+        remainCo = atoi(argv[2]);
+        ironNeed = atoi(argv[3]);
+        coNeed = atoi(argv[4]);
+        printf("input values are %d %d %d %d \n",remainIron,remainCo, ironNeed,coNeed);
+
         /*initialize sp*/
         sema_init(&robotArm1_s,0);
         sema_init(&robotArm2_s,0);
@@ -74,21 +82,20 @@ void run_factorii(char **argv){
         thread_create("observer",PRI_DEFAULT,observer,NULL);
         
         thread_create("timer",PRI_DEFAULT,timer,NULL);
-
         
         thread_create("furnace1",PRI_DEFAULT,furnace1,NULL);
-        //thread_create("furnace2",PRI_DEFAULT,furnace2,NULL);
+        thread_create("furnace2",PRI_DEFAULT,furnace2,NULL);
         thread_create("furnace3",PRI_DEFAULT,furnace3,NULL);
         thread_create("robotArm1",PRI_DEFAULT,robotArm1,NULL);
-        //thread_create("robotArm2",PRI_DEFAULT,robotArm2,NULL);
+        thread_create("robotArm2",PRI_DEFAULT,robotArm2,NULL);
         thread_create("robotArm3",PRI_DEFAULT,robotArm3,NULL);
-        //thread_create("robotArm4",PRI_DEFAULT,robotArm4,NULL);
+        thread_create("robotArm4",PRI_DEFAULT,robotArm4,NULL);
         thread_create("robotArm5",PRI_DEFAULT,robotArm5,NULL);
-        //thread_create("robotArm6",PRI_DEFAULT,robotArm6,NULL);
+        thread_create("robotArm6",PRI_DEFAULT,robotArm6,NULL);
         thread_create("belt1",PRI_DEFAULT,belt1,NULL);
-        //thread_create("belt2",PRI_DEFAULT,belt2,NULL);
+        thread_create("belt2",PRI_DEFAULT,belt2,NULL);
         thread_create("belt3",PRI_DEFAULT,belt3,NULL);
-        //thread_create("belt4",PRI_DEFAULT,belt4,NULL);
+        thread_create("belt4",PRI_DEFAULT,belt4,NULL);
 
 
         printf("implement factorii !\n");
