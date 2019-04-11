@@ -48,10 +48,10 @@ void furnace3(){
 
 void timer(){
     while(true){
-        /*if time change*/
+        timer_msleep(1000);
         sema_up(&timer_s);
-        /*wait for time change*/
     }
+    thread_yield();
 }
 
 void observer(){
@@ -77,7 +77,7 @@ void observer(){
         melting(heatTimeFurnace1),
         isIngot(onBelt3[0]),isIngot(onBelt3[1]),isIngot(onBelt3[2])
         );
-        printf("X X X X X X X X X \n");
+        printf("X X X X X X X X X -\n");
         printf("%c %c %c @ %c @ %c %c %c @\n",
         isOre(onBelt2[0]),isOre(onBelt2[1]), isOre(onBelt2[2]),
         melting(heatTimeFurnace2),

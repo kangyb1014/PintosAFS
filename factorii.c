@@ -48,6 +48,13 @@ int CoFeIng = 0;
 struct semaphore global_s;
 
 void run_factorii(char **argv){
+        /*get input*/
+        remainIron = atoi(argv[1]);
+        remainCo = atoi(argv[2]);
+        ironNeed = atoi(argv[3]);
+        coNeed = atoi(argv[4]);
+        printf("input values are %d %d %d %d \n",remainIron,remainCo, ironNeed,coNeed);
+
         /*initialize sp*/
         sema_init(&robotArm1_s,0);
         sema_init(&robotArm2_s,0);
