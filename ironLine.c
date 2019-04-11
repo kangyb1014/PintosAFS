@@ -21,10 +21,11 @@ void belt1(){
             for(int i = 2; i > 0; i--){
                 onBelt1[i] = onBelt1[i-1];
             }
-        }
-        if(remainIron > 0){
-            onBelt1[0] = true;
-            remainIron--;
+            onBelt1[0] = false;
+            if(remainIron > 0){
+                onBelt1[0] = true;
+                remainIron--;
+            }
         }
         sema_up(&global_s);
         sema_up(&ironLine_s);
@@ -43,7 +44,7 @@ void robotArm1(){
         sema_down(&ironLine_s);
         if(heatTimeFurnace1 == 0 && onBelt1[2]){
             onBelt1[2] = false;
-            heatTimeFurnace1++;
+            heatTimeFurnace1 = 1;
         }
         sema_up(&ironLine_s);
 
@@ -59,7 +60,7 @@ void furnace1(){
 
         /*critical section*/
         sema_down(&ironLine_s);
-        if(heatTimeFurnace1 < 2){
+        if(heatTimeFurnace1 > 0){
             heatTimeFurnace1++;
         }
         sema_up(&ironLine_s);
@@ -75,12 +76,12 @@ void robotArm3(){
 
         /*critical section*/
         sema_down(&ironLine_s);
-        if(onBelt3[0] == false && heatTimeFurnace1 == 2){
-            onBelt3[0] == true;
+        if(onBelt3[0] == false && heatTimeFurnace1 > 1){
+            onBelt3[0] = true;
             heatTimeFurnace1 = 0;
         }
         sema_up(&ironLine_s);
-
+        
         /*send signal to furnace 1*/
         sema_up(&robotArm3_s);
     }

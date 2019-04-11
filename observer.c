@@ -14,6 +14,9 @@
 #include "variables.h"
 #include "components.h"
 
+#define isOre(x) (x? 'o' : ' ')
+#define isIngot(x) (x? 'i': ' ')
+#define melting(x) (x < 1? ' ':(x > 1 ? 'i':'o'))
 
 void furnace3(){
     while(true){
@@ -53,9 +56,9 @@ void timer(){
 }
 
 void observer(){
-    /*더 이상 못 만들 때까지*/
     int i = 0;
-    while(i < 10){
+    bool flag = false;
+    while(!flag){
         sema_up(&observer_s);
         /* copper 만들면 사용 */
         //sema_up(&observer_s);
@@ -64,14 +67,38 @@ void observer(){
         sema_down(&timer_s);
 
         /*critical section, output*/
-        printf("%d second\n",i++);
-
         sema_down(&ironLine_s);
         sema_down(&copperLine_s);
         sema_down(&merging_s);
         sema_down(&global_s);
-        printf("X X X X X X X X X X");
-        
+
+        printf("\n%d second, %d CoFeIng created\n",++i,CoFeIng);
+
+        printf("X X X X X X X X X X\n");
+        printf("%c %c %c @ %c @ %c %c %c @\n",
+        isOre(onBelt1[0]),isOre(onBelt1[1]), isOre(onBelt1[2]),
+        melting(heatTimeFurnace1),
+        isIngot(onBelt3[0]),isIngot(onBelt3[1]),isIngot(onBelt3[2])
+        );
+        printf("X X X X X X X X X \n");
+        printf("%c %c %c @ %c @ %c %c %c @\n",
+        isOre(onBelt2[0]),isOre(onBelt2[1]), isOre(onBelt2[2]),
+        melting(heatTimeFurnace2),
+        isIngot(onBelt4[0]),isIngot(onBelt4[1]),isIngot(onBelt4[2])
+        );
+        printf("X X X X X X X X X X\n");
+
+        /*terminate condition*/
+        if(ironInFurnace3 < ironNeed || coInFurnace3 < coNeed){
+            if(!onBelt1[0] && !onBelt1[1] && !onBelt1[2] && 
+            !onBelt3[0] && !onBelt3[1] && !onBelt3[2] && heatTimeFurnace1 == 0)
+            flag = true;
+            
+            /*else if(!onBelt2[0] && !onBelt2[1] && !onBelt2[2] && 
+            !onBelt4[0] && !onBelt4[1] && !onBelt4[2] && heatTimeFurnace2 == 0)
+            flag = true;
+        */}
+
         sema_up(&global_s);
         sema_up(&merging_s);
         sema_up(&copperLine_s);
