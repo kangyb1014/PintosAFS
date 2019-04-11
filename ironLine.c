@@ -13,7 +13,6 @@ void belt1(){
     while(true){
         /*wait for robot arm1 signal*/
         sema_down(&robotArm1_s);
-
         /*critical section*/
         sema_down(&ironLine_s);
         sema_down(&global_s);
