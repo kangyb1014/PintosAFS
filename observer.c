@@ -69,15 +69,20 @@ void observer(){
         sema_down(&merging_s);
         sema_down(&global_s);
 
+        int usingIron = 0 + onBelt1[0] + onBelt1[1] + onBelt1[2] + (heatTimeFurnace1 == 0? 0 : 1)
+            + onBelt3[0] + onBelt3[1] + onBelt3[2] + ironInFurnace3;
+        int usingCopper = 0 + onBelt2[0] + onBelt2[1] + onBelt2[2] + (heatTimeFurnace2 == 0? 0 : 1)
+            + onBelt4[0] + onBelt4[1] + onBelt4[2] + coInFurnace3;
         printf("\n%d second, %d CoFeIng created\n",++i,CoFeIng);
-
+        printf("iron on producing line: %d, copper on producing line: %d\n",usingIron, usingCopper );
+        printf("unused iron: %d, unused copper: %d\n",remainIron, remainCo);
         printf("X X X X X X X X X X\n");
         printf("%c %c %c @ %c @ %c %c %c @\n",
         isOre(onBelt1[0]),isOre(onBelt1[1]), isOre(onBelt1[2]),
         melting(heatTimeFurnace1),
         isIngot(onBelt3[0]),isIngot(onBelt3[1]),isIngot(onBelt3[2])
         );
-        printf("X X X X X X X X X -\n");
+        printf("X X X X X X X X X %c\n", (heatTimeFurnace3 == 0? '-':heatTimeFurnace3+'0' ));
         printf("%c %c %c @ %c @ %c %c %c @\n",
         isOre(onBelt2[0]),isOre(onBelt2[1]), isOre(onBelt2[2]),
         melting(heatTimeFurnace2),
